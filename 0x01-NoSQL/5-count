@@ -1,0 +1,2 @@
+// Displays the number of ducments in the collection shcool
+db.school.count()
