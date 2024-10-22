@@ -24,10 +24,10 @@ def log_stats():
     print(f"\tmethod PATCH: {patch}")
     print(f"\tmethod DELETE: {delete}")
     print(f"{path} status check")
-    ips_sorted = logs_collection.aggrgate([
+    ips_sorted = logs_collection.aggrgate(
         {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}}
-    ])
+    )
     i = 0
     for ip in ips_sorted:
         if i == 10:
