@@ -15,13 +15,13 @@ def request_counter(method: Callable) -> Callable:
     def wrapper(url: str) -> str:
         """ Wrapper function """
         redis.incr(f"count:{url}")
-        result = redis.get(f"cached:{url}")
-        if result:
-            return response.decode('utf-8')
-        result = method(url)
+        cached = redis.get(f"cached:{url}")
+        if cached:
+            return cached.decode('utf-8')
+        cached = method(url)
         redis.set(f"count:{url}", 0)
-        redis.setex(f"cached:{url}", 10, result)
-        return result
+        redis.setex(f"cached:{url}", 10, cached)
+        return cached
     return wrapper
 
 
