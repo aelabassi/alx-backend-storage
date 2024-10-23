@@ -6,6 +6,9 @@ import requests
 from typing import Callable
 
 redis = redis.Redis()
+""" Redis instance """
+
+
 def request_counter(method: Callable) -> Callable:
     """ Count request decorator """
     @wraps(method)
@@ -16,12 +19,13 @@ def request_counter(method: Callable) -> Callable:
         if response:
             return response.decode('utf-8')
         result = method(url)
+        redis.set(f"count:{url}", 0)
         redis.setex(f"cached:{url}", 10, result)
         return result
     return wrapper
 
 
 @request_counter
-def  get_page(url: str) -> str:
+def get_page(url: str) -> str:
     """ Get page """
     return requests.get(url).text
