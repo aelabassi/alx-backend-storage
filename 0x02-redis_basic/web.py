@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""" Expering web cache and tracker """
+"""" Expiring web cache and tracker """
 from functools import wraps
 import redis
 import requests
@@ -9,7 +9,7 @@ redis = redis.Redis()
 def request_counter(method: Callable) -> Callable:
     """ Count request decorator """
     @wraps(method)
-    def wrapper(url):
+    def wrapper(url: str) -> str:
         """ Wrapper function """
         redis.incr(f"count:{url}")
         response = redis.get(f"cached:{url}")
