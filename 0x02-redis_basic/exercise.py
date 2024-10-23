@@ -6,6 +6,21 @@ from typing import Union, Callable
 from functools import wraps
 
 
+def replay(method: Callable) -> Callable:
+    """ Replay decorator """
+    self = method.__self__
+    key = method.__qualname__
+    count = self.get(key)
+    inputs = self.get(f"{key}:inputs")
+    outputs = self.get(f"{key}:outputs")
+    print(f"{key} was called {count} times:")
+    for i, (input, output) in enumerate(zip(inputs, outputs)):
+        print(f"{key}(*{input}) -> {output}")
+        if i == count - 1:
+            break
+    return method
+
+
 def count_calls(method: Callable) -> Callable:
     """ Count calls decorator """
     key = method.__qualname__
